@@ -307,6 +307,17 @@ class GildedRoseTest {
     }
 
     @Test
+    void backStagePassSellIn11Quality999DecreaseSellInByOneQualityRemains() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 11, 999) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("10, 999", actual);
+    }
+
+    @Test
     void backStagePassSellIn11Quality50DecreaseSellInByOneQualityRemains() {
         Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 11, 50) };
 
@@ -326,6 +337,28 @@ class GildedRoseTest {
 
         String actual = app.items[0].sellIn + ", " + app.items[0].quality;
         assertEquals("5, 50", actual);
+    }
+
+    @Test
+    void backStagePassSellIn12Quality40DecreaseSellInByOneIncreaseQualityByOne() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 12, 40) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("11, 41", actual);
+    }
+
+    @Test
+    void backStagePassSellIn12Quality60DecreaseSellInByOneQualityRemains() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 12, 60) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("11, 60", actual);
     }
 
     @Test

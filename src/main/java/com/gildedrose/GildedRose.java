@@ -61,11 +61,11 @@ class GildedRose {
 
     private void handleBackstagePassQuality(Item item) {
         if (item.sellIn < 11 && item.quality < 50) {
-            item.quality += 1;
-        }
-
-        if (item.sellIn < 6 && item.quality < 50) {
-            item.quality += 1;
+            if (item.sellIn < 6) {
+                item.quality += 2;
+            } else {
+                item.quality += 1;
+            }
         }
     }
 
@@ -91,4 +91,3 @@ class GildedRose {
         System.out.println("Processed: " + item.name + " @ " + new Date());
     }
 }
-
