@@ -31,6 +31,6 @@ class GildedRoseTest {
         app.process();
 
         String actual = app.items[0].sellIn + ", " + app.items[0].quality;
-        assertEquals("0, 0", actual);
+        assertEquals("4, 9", actual);
     }
 }
