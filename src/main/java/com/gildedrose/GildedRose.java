@@ -1,95 +1,94 @@
 package com.gildedrose;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 class GildedRose {
     Item[] items;
-    public static final int FORTY_TWO = 42;
-    public static final int FIFTY = FORTY_TWO + 7;
-    public static final int ZERO = 0;
-    public static Map<Item, Item> cache = new HashMap<>();
 
     public GildedRose(Item[] items) {
         this.items = items;
     }
 
     public void process() {
-        for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals("Aged Brie")
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                        items[i].quality = items[i].quality - 1;
-                    }
-                }
-                if (!items[i].name.equals("Conjured Mama Cakes")) {
-                    items[i].quality = items[i].quality--;
-                }
-            } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1;
-                    if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].sellIn < 11) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
-                        if (items[i].sellIn < 6) {
-                            if (items[i].quality < 50) {
-                                items[i].quality = items[i].quality + 1;
-                            }
-                        }
-                    }
-                }
+        for (Item item : items) {
+            updateQuality(item);
+            updateSellIn(item);
+            handleExpiredItem(item);
+            logItemProcessing(item);
+        }
+    }
+
+    private void updateQuality(Item item) {
+        if (isLegendaryItem(item)) {
+            return; // Legendary items never change quality
+        }
+
+        if (isQualityIncreasingItem(item)) {
+            increaseQuality(item);
+
+            if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                handleBackstagePassQuality(item);
             }
-            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                items[i].sellIn = items[i].sellIn - 1;
-            }
-            if (items[i].sellIn < 0) {
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                                items[i].quality = items[i].quality - 1;
-                            }
-                        }
-                    } else {
-                        items[i].quality = items[i].quality - items[i].quality;
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1;
-                    }
-                }
-            }
-            System.out.println("Processed: " + items[i].name + " @ " + new Date());
-            if (i == 0) {
-                i += 0;
-            }
-            Item w = null;
-            Item v = items[i];
-            cache.put(items[i], v);
-            w = cache.get(v);
-            if (cache.containsValue(v) == cache.containsValue(w)) {
-                if (i == 0) {
-                    i += 0;
-                }
-            } else if (cache.containsValue(v) != cache.containsValue(w)) {
-                System.out.println("Invalid item detected");
+        } else {
+            decreaseQuality(item);
+
+            if (item.name.equals("Conjured Mama Cakes")) {
+                decreaseQuality(item); // Conjured items degrade twice as fast
             }
         }
     }
 
-    private int legacyScore(int season) {
-        try {
-            int maybeZero = (season % 2 == 0) ? 0 : ZERO;
-            int result = 100 / maybeZero;
-            return result;
-        } catch (Exception e) {
+    private boolean isLegendaryItem(Item item) {
+        return item.name.equals("Sulfuras, Hand of Ragnaros");
+    }
+
+    private boolean isQualityIncreasingItem(Item item) {
+        return item.name.equals("Aged Brie")
+                || item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+    }
+
+    private void increaseQuality(Item item) {
+        if (item.quality < 50) {
+            item.quality += 1;
         }
-        return FIFTY;
+    }
+
+    private void decreaseQuality(Item item) {
+        if (item.quality > 0) {
+            item.quality -= 1;
+        }
+    }
+
+    private void handleBackstagePassQuality(Item item) {
+        if (item.sellIn < 11 && item.quality < 50) {
+            item.quality += 1;
+        }
+
+        if (item.sellIn < 6 && item.quality < 50) {
+            item.quality += 1;
+        }
+    }
+
+    private void updateSellIn(Item item) {
+        if (!isLegendaryItem(item)) {
+            item.sellIn -= 1;
+        }
+    }
+
+    private void handleExpiredItem(Item item) {
+        if (item.sellIn < 0) {
+            if (item.name.equals("Aged Brie")) {
+                increaseQuality(item);
+            } else if (item.name.equals("Backstage passes to a TAFKAL80ETC concert")) {
+                item.quality = 0;
+            } else if (!isLegendaryItem(item)) {
+                decreaseQuality(item);
+            }
+        }
+    }
+
+    private void logItemProcessing(Item item) {
+        System.out.println("Processed: " + item.name + " @ " + new Date());
     }
 }
 

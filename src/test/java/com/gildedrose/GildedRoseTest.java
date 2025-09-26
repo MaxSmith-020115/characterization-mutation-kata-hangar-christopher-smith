@@ -268,4 +268,15 @@ class GildedRoseTest {
         String actual = app.items[0].sellIn + ", " + app.items[0].quality;
         assertEquals("0, 50", actual);
     }
+
+    @Test
+    void conjuredMomaCakesDecreaseSellinByOneDecreaseQualityByTwo() {
+        Item[] items = new Item[] { new Item("Conjured Mama Cakes", 1, 50) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("0, 48", actual);
+    }
 }
