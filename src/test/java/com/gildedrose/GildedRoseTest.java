@@ -279,4 +279,27 @@ class GildedRoseTest {
         String actual = app.items[0].sellIn + ", " + app.items[0].quality;
         assertEquals("0, 48", actual);
     }
+
+    @Test
+    void backStagePassSellInLessThan11QualityLessThan50DecreaseSellInByOneIncreaseQualityByTwo() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 8, 40) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("7, 42", actual);
+    }
+
+    @Test
+    void backStagePassSellIn1Quality999DecreaseSellInByOneQualityRemains() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 1, 999) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("0, 999", actual);
+    }
+
 }
