@@ -307,6 +307,28 @@ class GildedRoseTest {
     }
 
     @Test
+    void backStagePassSellIn11Quality50DecreaseSellInByOneQualityRemains() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 11, 50) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("10, 50", actual);
+    }
+
+    @Test
+    void backStagePassSellIn6Quality50DecreaseSellInByOneQualityRemains() {
+        Item[] items = new Item[] { new Item("Backstage passes to a TAFKAL80ETC concert", 6, 50) };
+
+        GildedRose app = new GildedRose(items);
+        app.process();
+
+        String actual = app.items[0].sellIn + ", " + app.items[0].quality;
+        assertEquals("5, 50", actual);
+    }
+
+    @Test
     void verifyLogItemProcessingIsCalled() {
         Item[] items = new Item[]{new Item("Test Item", 5, 10)};
         GildedRose app = new GildedRose(items);
