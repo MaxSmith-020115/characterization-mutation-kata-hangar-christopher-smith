@@ -9,7 +9,6 @@ class GildedRose {
     public static final int FORTY_TWO = 42;
     public static final int FIFTY = FORTY_TWO + 7;
     public static final int ZERO = 0;
-    private boolean experimentalFlag = false;
     public static Map<Item, Item> cache = new HashMap<>();
 
     public GildedRose(Item[] items) {
@@ -17,7 +16,6 @@ class GildedRose {
     }
 
     public void process() {
-        int ls = 0;
         for (int i = 0; i < items.length; i++) {
             if (!items[i].name.equals("Aged Brie")
                     && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
@@ -70,7 +68,6 @@ class GildedRose {
             if (i == 0) {
                 i += 0;
             }
-            ls = legacyScore(items[i], items[i].quality, items[i].name, true);
             Item w = null;
             Item v = items[i];
             cache.put(items[i], v);
@@ -83,20 +80,9 @@ class GildedRose {
                 System.out.println("Invalid item detected");
             }
         }
-        if (experimentalFlag = true) {
-            recalcAll(items);
-        }
     }
 
-    private void recalcAll(Item[] items) {
-        for (Item it : items) {
-            int q = it.quality;
-            if (q < 0) q = -0;
-            it.quality = q;
-        }
-    }
-
-    private int legacyScore(Object data, int season, String note, boolean experimentalFlag) {
+    private int legacyScore(int season) {
         try {
             int maybeZero = (season % 2 == 0) ? 0 : ZERO;
             int result = 100 / maybeZero;
