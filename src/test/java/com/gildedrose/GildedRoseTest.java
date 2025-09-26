@@ -2,7 +2,11 @@ package com.gildedrose;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GildedRoseTest {
 
@@ -300,6 +304,26 @@ class GildedRoseTest {
 
         String actual = app.items[0].sellIn + ", " + app.items[0].quality;
         assertEquals("0, 999", actual);
+    }
+
+    @Test
+    void verifyLogItemProcessingIsCalled() {
+        Item[] items = new Item[]{new Item("Test Item", 5, 10)};
+        GildedRose app = new GildedRose(items);
+
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        try {
+            app.process();
+
+            String output = outputStream.toString();
+            assertTrue(output.contains("Processed: Test Item @"),
+                    "The log message should contain the item name and date");
+        } finally {
+            System.setOut(originalOut);
+        }
     }
 
 }
